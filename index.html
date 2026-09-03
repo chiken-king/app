@@ -45,7 +45,6 @@
 <body>
 
     <header>
-        <!-- Logo ditaruh di sini -->
         <img src="logo.png" alt="Chicken King" class="logo-img">
         <p>Pesan Praktis & Cepat via WhatsApp</p>
     </header>
@@ -69,22 +68,15 @@
 
         <!-- Form Data Pembeli -->
         <div class="form-section">
-            <h2 class="section-title">Data Pengiriman</h2>
+            <h2 class="section-title">Data Pesanan (Takeaway)</h2>
             <form id="order-form">
                 <div class="form-group">
-                    <label>Nama Lengkap</label>
+                    <label>Nama Pemesan</label>
                     <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
                 </div>
                 <div class="form-group">
-                    <label>Metode Pesanan</label>
-                    <select id="metode">
-                        <option value="Delivery">Delivery (Antar ke Alamat)</option>
-                        <option value="Takeaway">Takeaway (Ambil di Toko)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Alamat Lengkap / Catatan</label>
-                    <textarea id="alamat" rows="3" placeholder="Masukkan alamat lengkap atau catatan pesanan (misal: tingkat pedas, dll)" required></textarea>
+                    <label>Catatan Pesanan</label>
+                    <textarea id="catatan" rows="3" placeholder="Masukkan catatan tambahan (misal: jam pengambilan, tingkat pedas, dll)"></textarea>
                 </div>
                 <button type="button" class="btn-wa" onclick="sendToWhatsApp()">📲 Pesan Sekarang via WhatsApp</button>
             </form>
@@ -188,15 +180,14 @@
             }
 
             const nama = document.getElementById('nama').value.trim();
-            const metode = document.getElementById('metode').value;
-            const alamat = document.getElementById('alamat').value.trim();
+            const catatan = document.getElementById('catatan').value.trim();
 
-            if (!nama || !alamat) {
-                alert("Harap isi Nama dan Alamat/Catatan!");
+            if (!nama) {
+                alert("Harap isi Nama Pemesan!");
                 return;
             }
 
-            let message = `*Halo Chicken King, Saya Mau Pesan:*\n\n`;
+            let message = `*Halo Chicken King, Saya Mau Pesan (Takeaway):*\n\n`;
             let total = 0;
 
             cartArray.forEach(item => {
@@ -208,8 +199,10 @@
             message += `\n*Total Pesanan:* Rp ${total.toLocaleString('id-ID')}\n\n`;
             message += `*Data Pemesan:*\n`;
             message += `• Nama: ${nama}\n`;
-            message += `• Tipe: ${metode}\n`;
-            message += `• Alamat/Catatan: ${alamat}\n`;
+            message += `• Tipe: Takeaway (Ambil di Toko)\n`;
+            if (catatan) {
+                message += `• Catatan: ${catatan}\n`;
+            }
 
             const encodedMessage = encodeURIComponent(message);
             const waUrl = `https://wa.me/${NO_WHATSAPP}?text=${encodedMessage}`;
