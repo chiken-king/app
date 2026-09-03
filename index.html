@@ -5,44 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chicken King - Pesan Online</title>
     
-    <!-- PWA Settings & Theme -->
+    <!-- Link Manifest PWA -->
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#5a0b0d">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Chicken King">
     <link rel="apple-touch-icon" href="logo.png">
-
-    <!-- Web Application Manifest Dynamic -->
-    <script>
-        const manifest = {
-            "name": "Chicken King Order App",
-            "short_name": "Chicken King",
-            "description": "Aplikasi Pemesanan Chicken King via WhatsApp",
-            "start_url": "./",
-            "display": "standalone",
-            "background_color": "#fcf8f5",
-            "theme_color": "#5a0b0d",
-            "icons": [
-                {
-                    "src": "logo.png",
-                    "sizes": "192x192",
-                    "type": "image/png"
-                },
-                {
-                    "src": "logo.png",
-                    "sizes": "512x512",
-                    "type": "image/png"
-                }
-            ]
-        };
-        const stringManifest = JSON.stringify(manifest);
-        const blob = new Blob([stringManifest], {type: 'application/json'});
-        const manifestURL = URL.createObjectURL(blob);
-        const link = document.createElement('link');
-        link.rel = 'manifest';
-        link.href = manifestURL;
-        document.head.appendChild(link);
-    </script>
 
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
@@ -50,7 +19,7 @@
         
         /* Header */
         header { background-color: #5a0b0d; color: white; text-align: center; padding: 20px 10px; border-bottom: 4px solid #801315; }
-        .logo-img { max-width: 220px; height: auto; margin-bottom: 8px; display: inline-block; }
+        .logo-img { max-width: 200px; width: 100%; height: auto; margin-bottom: 8px; display: inline-block; }
         header p { font-size: 14px; opacity: 0.9; }
 
         /* Layout Main */
@@ -78,7 +47,7 @@
         /* Input Form */
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: bold; color: #444; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
 
         /* Total & Button WA */
         .total-box { font-size: 18px; font-weight: bold; text-align: right; margin-top: 15px; color: #801315; }
@@ -95,17 +64,14 @@
 
     <div class="container">
         
-        <!-- Banner Prompt Install Aplikasi -->
         <div id="install-banner" class="install-banner">
-            📲 Pasang aplikasi ini di HP kamu biar praktis!
+            📲 Pasang aplikasi ini di HP kamu!
             <button id="install-btn" class="btn-install">Instal</button>
         </div>
 
-        <!-- Katalog Menu -->
         <h2 class="section-title">Pilih Menu Ayam & Saos</h2>
         <div class="menu-grid" id="menu-container"></div>
 
-        <!-- Keranjang Belanja -->
         <div class="cart-section">
             <h2 class="section-title">Pesanan Anda</h2>
             <div id="cart-items">
@@ -116,7 +82,6 @@
             </div>
         </div>
 
-        <!-- Form Data Pembeli -->
         <div class="form-section">
             <h2 class="section-title">Data Pesanan (Takeaway)</h2>
             <form id="order-form">
@@ -261,18 +226,12 @@
 
         renderMenu();
 
-        // --- SERVICE WORKER & PWA INSTALL LOGIC ---
+        // Register Service Worker
         if ('serviceWorker' in navigator) {
-            const swCode = `
-                self.addEventListener('install', e => self.skipWaiting());
-                self.addEventListener('activate', e => e.waitUntil(clients.claim()));
-                self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-            `;
-            const blob = new Blob([swCode], { type: 'text/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).catch(() => {});
+            navigator.serviceWorker.register('sw.js');
         }
 
+        // Install Prompt
         let deferredPrompt;
         const installBanner = document.getElementById('install-banner');
         const installBtn = document.getElementById('install-btn');
