@@ -4,6 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chicken King - Pesan Online</title>
+    
+    <!-- PWA Settings & Theme -->
+    <meta name="theme-color" content="#5a0b0d">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Chicken King">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- Web Application Manifest Dynamic -->
+    <script>
+        const manifest = {
+            "name": "Chicken King Order App",
+            "short_name": "Chicken King",
+            "description": "Aplikasi Pemesanan Chicken King via WhatsApp",
+            "start_url": "./",
+            "display": "standalone",
+            "background_color": "#fcf8f5",
+            "theme_color": "#5a0b0d",
+            "icons": [
+                {
+                    "src": "logo.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                },
+                {
+                    "src": "logo.png",
+                    "sizes": "512x512",
+                    "type": "image/png"
+                }
+            ]
+        };
+        const stringManifest = JSON.stringify(manifest);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blob);
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestURL;
+        document.head.appendChild(link);
+    </script>
+
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
         body { background-color: #fcf8f5; color: #333; padding-bottom: 80px; }
@@ -16,6 +56,10 @@
         /* Layout Main */
         .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
         
+        /* Banner Install PWA */
+        .install-banner { display: none; background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 12px 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 14px; }
+        .btn-install { background: #801315; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-left: 8px; }
+
         /* Grid Menu */
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .menu-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; flex-direction: column; border: 1px solid #eee; }
@@ -51,6 +95,12 @@
 
     <div class="container">
         
+        <!-- Banner Prompt Install Aplikasi -->
+        <div id="install-banner" class="install-banner">
+            📲 Pasang aplikasi ini di HP kamu biar praktis!
+            <button id="install-btn" class="btn-install">Instal</button>
+        </div>
+
         <!-- Katalog Menu -->
         <h2 class="section-title">Pilih Menu Ayam & Saos</h2>
         <div class="menu-grid" id="menu-container"></div>
@@ -210,6 +260,38 @@
         }
 
         renderMenu();
+
+        // --- SERVICE WORKER & PWA INSTALL LOGIC ---
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', e => self.skipWaiting());
+                self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+                self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+            `;
+            const blob = new Blob([swCode], { type: 'text/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(() => {});
+        }
+
+        let deferredPrompt;
+        const installBanner = document.getElementById('install-banner');
+        const installBtn = document.getElementById('install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', () => {
+            installBanner.style.display = 'none';
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(() => {
+                    deferredPrompt = null;
+                });
+            }
+        });
     </script>
 </body>
 </html>
