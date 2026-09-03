@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicken King - Pesan Online</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #fcf8f5; color: #333; padding-bottom: 80px; }
+        
+        /* Header */
+        header { background-color: #5a0b0d; color: white; text-align: center; padding: 20px 10px; border-bottom: 4px solid #801315; }
+        .logo-img { max-width: 220px; height: auto; margin-bottom: 8px; display: inline-block; }
+        header p { font-size: 14px; opacity: 0.9; }
+
+        /* Layout Main */
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        
+        /* Grid Menu */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .menu-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; flex-direction: column; border: 1px solid #eee; }
+        .menu-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .menu-title { font-size: 15px; font-weight: bold; margin-bottom: 8px; color: #222; }
+        .menu-price { color: #801315; font-weight: bold; font-size: 16px; margin-bottom: 12px; }
+        .btn-add { background-color: #801315; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; }
+        .btn-add:hover { background-color: #5a0b0d; }
+
+        /* Form & Keranjang */
+        .section-title { font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #801315; padding-bottom: 5px; color: #5a0b0d; font-weight: bold; }
+        .cart-section, .form-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; border: 1px solid #eee; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #e0e0e0; }
+        .cart-controls button { background: #f0f0f0; border: 1px solid #ccc; width: 28px; height: 28px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        
+        /* Input Form */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: bold; color: #444; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+
+        /* Total & Button WA */
+        .total-box { font-size: 18px; font-weight: bold; text-align: right; margin-top: 15px; color: #801315; }
+        .btn-wa { background-color: #25D366; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; transition: background 0.2s; }
+        .btn-wa:hover { background-color: #1ebc57; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- Logo ditaruh di sini -->
+        <img src="logo.png" alt="Chicken King" class="logo-img">
+        <p>Pesan Praktis & Cepat via WhatsApp</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- Katalog Menu -->
+        <h2 class="section-title">Pilih Menu Ayam & Saos</h2>
+        <div class="menu-grid" id="menu-container"></div>
+
+        <!-- Keranjang Belanja -->
+        <div class="cart-section">
+            <h2 class="section-title">Pesanan Anda</h2>
+            <div id="cart-items">
+                <p style="color: #777; font-size: 14px;">Keranjang masih kosong.</p>
+            </div>
+            <div class="total-box">
+                Total: Rp <span id="total-price">0</span>
+            </div>
+        </div>
+
+        <!-- Form Data Pembeli -->
+        <div class="form-section">
+            <h2 class="section-title">Data Pengiriman</h2>
+            <form id="order-form">
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
+                </div>
+                <div class="form-group">
+                    <label>Metode Pesanan</label>
+                    <select id="metode">
+                        <option value="Delivery">Delivery (Antar ke Alamat)</option>
+                        <option value="Takeaway">Takeaway (Ambil di Toko)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Alamat Lengkap / Catatan</label>
+                    <textarea id="alamat" rows="3" placeholder="Masukkan alamat lengkap atau catatan pesanan (misal: tingkat pedas, dll)" required></textarea>
+                </div>
+                <button type="button" class="btn-wa" onclick="sendToWhatsApp()">📲 Pesan Sekarang via WhatsApp</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        const NO_WHATSAPP = "6281257028511"; 
+
+        const products = [
+            { id: 1, name: "Dada / Paha Atas", price: 9000 },
+            { id: 2, name: "Sayap / Paha Bawah", price: 8000 },
+            { id: 3, name: "Dada / Paha Atas (Geprek)", price: 12000 },
+            { id: 4, name: "Sayap / Paha Bawah (Geprek)", price: 11000 },
+            { id: 5, name: "Dada / Paha Atas + Nasi", price: 12000 },
+            { id: 6, name: "Sayap / Paha Bawah + Nasi", price: 11000 },
+            { id: 7, name: "Dada / Paha Atas + Nasi (Geprek)", price: 15000 },
+            { id: 8, name: "Sayap / Paha Bawah + Nasi (Geprek)", price: 14000 },
+            { id: 9, name: "Saos Black pepper", price: 2000 },
+            { id: 10, name: "Saos Barbeque", price: 2000 },
+            { id: 11, name: "Saos Pedas", price: 2000 },
+            { id: 12, name: "Saos Keju", price: 2000 }
+        ];
+
+        let cart = {};
+
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = products.map(item => `
+                <div class="menu-card">
+                    <div class="menu-info">
+                        <div>
+                            <div class="menu-title">${item.name}</div>
+                            <div class="menu-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+                        </div>
+                        <button class="btn-add" onclick="addToCart(${item.id})">+ Tambah</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            if (cart[id]) {
+                cart[id].qty += 1;
+            } else {
+                const product = products.find(p => p.id === id);
+                cart[id] = { ...product, qty: 1 };
+            }
+            updateCartUI();
+        }
+
+        function updateQty(id, change) {
+            if (cart[id]) {
+                cart[id].qty += change;
+                if (cart[id].qty <= 0) {
+                    delete cart[id];
+                }
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItemsEl = document.getElementById('cart-items');
+            const totalPriceEl = document.getElementById('total-price');
+            const cartArray = Object.values(cart);
+            
+            if (cartArray.length === 0) {
+                cartItemsEl.innerHTML = '<p style="color: #777; font-size: 14px;">Keranjang masih kosong.</p>';
+                totalPriceEl.innerText = '0';
+                return;
+            }
+
+            let total = 0;
+            cartItemsEl.innerHTML = cartArray.map(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            <small>Rp ${item.price.toLocaleString('id-ID')} x ${item.qty}</small>
+                        </div>
+                        <div class="cart-controls">
+                            <button onclick="updateQty(${item.id}, -1)">-</button>
+                            <span style="margin: 0 8px;">${item.qty}</span>
+                            <button onclick="updateQty(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalPriceEl.innerText = total.toLocaleString('id-ID');
+        }
+
+        function sendToWhatsApp() {
+            const cartArray = Object.values(cart);
+            if (cartArray.length === 0) {
+                alert("Pilih minimal satu menu terlebih dahulu!");
+                return;
+            }
+
+            const nama = document.getElementById('nama').value.trim();
+            const metode = document.getElementById('metode').value;
+            const alamat = document.getElementById('alamat').value.trim();
+
+            if (!nama || !alamat) {
+                alert("Harap isi Nama dan Alamat/Catatan!");
+                return;
+            }
+
+            let message = `*Halo Chicken King, Saya Mau Pesan:*\n\n`;
+            let total = 0;
+
+            cartArray.forEach(item => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                message += `• ${item.qty}x ${item.name} (Rp ${subtotal.toLocaleString('id-ID')})\n`;
+            });
+
+            message += `\n*Total Pesanan:* Rp ${total.toLocaleString('id-ID')}\n\n`;
+            message += `*Data Pemesan:*\n`;
+            message += `• Nama: ${nama}\n`;
+            message += `• Tipe: ${metode}\n`;
+            message += `• Alamat/Catatan: ${alamat}\n`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const waUrl = `https://wa.me/${NO_WHATSAPP}?text=${encodedMessage}`;
+            window.open(waUrl, '_blank');
+        }
+
+        renderMenu();
+    </script>
+</body>
+</html>
