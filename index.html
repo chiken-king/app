@@ -5,22 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chicken King - Pesan Online</title>
     
-    <!-- Link Manifest PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#5a0b0d">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Chicken King">
-    <link rel="apple-touch-icon" href="logo.png">
 
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
         body { background-color: #fcf8f5; color: #333; padding-bottom: 80px; }
         
         /* Header */
-        header { background-color: #5a0b0d; color: white; text-align: center; padding: 20px 10px; border-bottom: 4px solid #801315; }
-        .logo-img { max-width: 200px; width: 100%; height: auto; margin-bottom: 8px; display: inline-block; }
-        header p { font-size: 14px; opacity: 0.9; }
+        header { background-color: #5a0b0d; color: white; text-align: center; padding: 25px 15px 20px 15px; border-bottom: 4px solid #801315; }
+        .logo-container { max-width: 260px; width: 100%; margin: 0 auto 10px auto; display: block; }
+        .logo-container svg { width: 100%; height: auto; fill: #ffffff; display: block; }
+        header p { font-size: 14px; opacity: 0.9; margin-top: 5px; }
 
         /* Layout Main */
         .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
@@ -58,7 +57,14 @@
 <body>
 
     <header>
-        <img src="logo.png" alt="Chicken King" class="logo-img">
+        <!-- Logo SVG Vektor (Langsung tertanam) -->
+        <div class="logo-container">
+            <svg viewBox="0 0 1000 350" xmlns="http://www.w3.org/2000/svg">
+                <path d="M142 35c-30 0-54 24-54 54 0 12 4 23 11 32-22 10-39 30-45 54 22-1 42 7 57 21 21-35 59-58 102-58 66 0 120 54 120 120 0 35-15 67-39 89h112c32 0 58-26 58-58 0-140-114-254-254-254zm-12 36c6 0 10 4 10 10s-4 10-10 10-10-4-10-10 4-10 10-10z" fill="#ffffff"/>
+                <text x="310" y="110" font-family="'Arial Black', Impact, sans-serif" font-weight="900" font-size="115" fill="#ffffff" letter-spacing="2">CHICKEN</text>
+                <text x="310" y="310" font-family="'Arial Black', Impact, sans-serif" font-weight="900" font-size="210" fill="#ffffff" letter-spacing="4">KING</text>
+            </svg>
+        </div>
         <p>Pesan Praktis & Cepat via WhatsApp</p>
     </header>
 
@@ -226,12 +232,10 @@
 
         renderMenu();
 
-        // Register Service Worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('sw.js').catch(() => {});
         }
 
-        // Install Prompt
         let deferredPrompt;
         const installBanner = document.getElementById('install-banner');
         const installBtn = document.getElementById('install-btn');
