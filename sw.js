@@ -1,8 +1,10 @@
-const CACHE_NAME = 'chicken-king-v1';
+const CACHE_NAME = 'chicken-king-v3';
 const urlsToCache = [
-  './',
-  './index.html',
-  './manifest.json'
+  '/app/',
+  '/app/index.html',
+  '/app/manifest.json',
+  '/app/logo.png',
+  '/app/qris.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -11,6 +13,22 @@ self.addEventListener('install', (event) => {
       return cache.addAll(urlsToCache);
     })
   );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
