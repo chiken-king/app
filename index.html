@@ -51,22 +51,40 @@
             margin-top: 4px; 
         }
 
-        /* Link Lokasi Maps */
-        .location-link {
-            display: inline-block;
+        /* Link Header Group */
+        .header-links {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
             margin-top: 12px;
-            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Link Lokasi Maps & Download */
+        .header-btn {
+            display: inline-block;
             color: #ffffff;
             text-decoration: none;
-            padding: 6px 14px;
+            padding: 7px 14px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: background-color 0.2s;
+            transition: all 0.2s;
         }
-        .location-link:hover {
+        .btn-maps {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .btn-maps:hover {
             background-color: rgba(255, 255, 255, 0.3);
+        }
+        .btn-download-header {
+            background-color: #2e7d32;
+            border: 1px solid #388e3c;
+            color: #fff;
+        }
+        .btn-download-header:hover {
+            background-color: #1b5e20;
         }
 
         /* Main Container */
@@ -106,7 +124,7 @@
 
         /* Form & Keranjang */
         .section-title { font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #801315; padding-bottom: 5px; color: #5a0b0d; font-weight: bold; }
-        .cart-section, .form-section, .review-section, .qr-app-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; border: 1px solid #eee; }
+        .cart-section, .form-section, .review-section, .download-section, .qr-app-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; border: 1px solid #eee; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #e0e0e0; }
         .cart-controls button { background: #f0f0f0; border: 1px solid #ccc; width: 28px; height: 28px; font-weight: bold; cursor: pointer; border-radius: 4px; }
         
@@ -196,6 +214,21 @@
         }
         .btn-review:hover { background-color: #2b6cb0; }
 
+        /* Style Section Download Aplikasi */
+        .btn-download-big {
+            display: block;
+            background-color: #2e7d32;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+        .btn-download-big:hover { background-color: #1b5e20; }
+
         /* Style Section QR Code Aplikasi */
         .qr-app-section {
             text-align: center;
@@ -212,13 +245,18 @@
 <body>
 
     <header>
-        <img src="logo.png?v=8" alt="Chicken King Logo" class="logo-img">
+        <img src="logo.png?v=9" alt="Chicken King Logo" class="logo-img">
         <div class="tagline">Solusi Perut Lapar</div>
         <p class="sub-desc">Pesan Praktis & Cepat via WhatsApp</p>
         
-        <a href="https://maps.app.goo.gl/q16dMSzeFJNw7NnDA?g_st=ac" target="_blank" rel="noopener noreferrer" class="location-link">
-            📍 Lihat Lokasi di Google Maps
-        </a>
+        <div class="header-links">
+            <a href="https://maps.app.goo.gl/q16dMSzeFJNw7NnDA?g_st=ac" target="_blank" rel="noopener noreferrer" class="header-btn btn-maps">
+                📍 Lokasi Google Maps
+            </a>
+            <a href="https://drive.google.com/drive/folders/1aQuLw7OtLClv5qqIu1Dns2uNLqwZRvXo" target="_blank" rel="noopener noreferrer" class="header-btn btn-download-header">
+                ⬇️ Download Aplikasi APK
+            </a>
+        </div>
     </header>
 
     <div class="container">
@@ -284,6 +322,15 @@
 
                 <button type="button" id="btn-submit" class="btn-wa" onclick="sendToWhatsApp()">📲 Pesan Tunai via WhatsApp</button>
             </form>
+        </div>
+
+        <!-- Section Download Aplikasi APK -->
+        <div class="download-section">
+            <h2 class="section-title">📲 Download Aplikasi Android (APK)</h2>
+            <p style="font-size: 13px; color: #555; margin-bottom: 12px;">Ingin memesan lebih cepat langsung dari HP? Unduh file instalasi aplikasi Chicken King resmi via Google Drive berikut:</p>
+            <a href="https://drive.google.com/drive/folders/1aQuLw7OtLClv5qqIu1Dns2uNLqwZRvXo" target="_blank" rel="noopener noreferrer" class="btn-download-big">
+                ⬇️ Unduh Aplikasi Chicken King (Google Drive)
+            </a>
         </div>
 
         <!-- Section Beri Ulasan Google Maps -->
