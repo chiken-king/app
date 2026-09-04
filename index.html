@@ -25,10 +25,10 @@
             border-bottom: 4px solid #801315; 
         }
         
-        /* Logo Gambar */
+        /* Logo Gambar Asli (Bukan SVG) */
         .logo-img { 
-            max-width: 200px; 
-            width: 70%; 
+            max-width: 180px; 
+            width: 65%; 
             height: auto; 
             margin: 0 auto 6px auto; 
             display: block; 
@@ -110,28 +110,35 @@
         .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #e0e0e0; }
         .cart-controls button { background: #f0f0f0; border: 1px solid #ccc; width: 28px; height: 28px; font-weight: bold; cursor: pointer; border-radius: 4px; }
         
-        /* Input Form */
+        /* Form Inputs */
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: bold; color: #444; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        .form-group input, .form-group textarea, .form-group select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            background-color: #fff;
+        }
 
-        /* QRIS Box */
+        /* Box Tampilan QRIS */
         .qris-box {
-            background-color: #fdf8f8;
+            background-color: #fffdf5;
             border: 2px dashed #801315;
             border-radius: 10px;
             padding: 15px;
             text-align: center;
             margin-bottom: 15px;
-            display: none; /* Muncul jika metode QRIS dipilih */
+            display: none; /* Muncul otomatis saat opsi QRIS dipilih */
         }
         .qris-img {
-            max-width: 250px;
+            max-width: 240px;
             width: 100%;
             height: auto;
             border-radius: 8px;
             margin: 10px 0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
         }
 
         /* Total & Button WA */
@@ -143,7 +150,8 @@
 <body>
 
     <header>
-        <img src="logo.png?v=2" alt="Chicken King Logo" class="logo-img">
+        <!-- Hanya Menggunakan File logo.png (SVG Bawaan Sudah Dihapus Total) -->
+        <img src="logo.png?v=3" alt="Chicken King Logo" class="logo-img">
         <div class="tagline">Solusi Perut Lapar</div>
         <p class="sub-desc">Pesan Praktis & Cepat via WhatsApp</p>
         
@@ -176,31 +184,32 @@
             <h2 class="section-title">Data Pesanan (Takeaway)</h2>
             <form id="order-form">
                 <div class="form-group">
-                    <label>Nama Pemesan</label>
+                    <label for="nama">Nama Pemesan</label>
                     <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
                 </div>
 
-                <!-- Pilihan Pembayaran -->
+                <!-- PILIHAN PEMBAYARAN -->
                 <div class="form-group">
-                    <label>Metode Pembayaran</label>
+                    <label for="pembayaran">Metode Pembayaran</label>
                     <select id="pembayaran" onchange="toggleQrisDisplay()">
-                        <option value="Tunai / Tunai di Toko">Tunai (Bayar saat Pengambilan)</option>
-                        <option value="QRIS / Non-Tunai">QRIS (Transfer Sekarang)</option>
+                        <option value="Tunai">Tunai (Bayar Saat Pengambilan)</option>
+                        <option value="QRIS">QRIS (Transfer Sekarang)</option>
                     </select>
                 </div>
 
-                <!-- Tampilan QRIS -->
+                <!-- BOX TAMPILAN KODE QRIS -->
                 <div id="qris-container" class="qris-box">
                     <p style="font-size: 13px; font-weight: bold; color: #5a0b0d;">Silakan Scan QRIS di Bawah Ini:</p>
                     <img src="qris.png" alt="QRIS Chicken King" class="qris-img">
-                    <p style="font-size: 12px; color: #666;">Scan QRIS menggunakan Mobile Banking atau E-Wallet (GoPay, OVO, Dana, ShopeePay, dll).</p>
-                    <p style="font-size: 12px; color: #801315; font-weight: bold; margin-top: 5px;">*Kirimkan bukti transfer saat pesan dikirim via WhatsApp.</p>
+                    <p style="font-size: 12px; color: #555;">Dapat di-scan dengan GoPay, OVO, Dana, ShopeePay, Mobile Banking, dll.</p>
+                    <p style="font-size: 12px; color: #801315; font-weight: bold; margin-top: 6px;">*Mohon lampirkan tangkapan layar / bukti transfer saat chat WhatsApp terhubung.</p>
                 </div>
 
                 <div class="form-group">
-                    <label>Catatan Pesanan</label>
+                    <label for="catatan">Catatan Pesanan</label>
                     <textarea id="catatan" rows="3" placeholder="Masukkan catatan tambahan (misal: jam pengambilan, tingkat pedas, dll)"></textarea>
                 </div>
+
                 <button type="button" class="btn-wa" onclick="sendToWhatsApp()">📲 Pesan Sekarang via WhatsApp</button>
             </form>
         </div>
@@ -298,7 +307,7 @@
         function toggleQrisDisplay() {
             const pembayaran = document.getElementById('pembayaran').value;
             const qrisBox = document.getElementById('qris-container');
-            if (pembayaran.includes("QRIS")) {
+            if (pembayaran === "QRIS") {
                 qrisBox.style.display = "block";
             } else {
                 qrisBox.style.display = "none";
@@ -339,8 +348,8 @@
                 message += `• Catatan: ${catatan}\n`;
             }
 
-            if (pembayaran.includes("QRIS")) {
-                message += `\n*(Saya akan melampirkan bukti foto transfer QRIS setelah pesan ini)*`;
+            if (pembayaran === "QRIS") {
+                message += `\n*(Saya lampirkan bukti pembayaran QRIS pada pesan berikutnya)*`;
             }
 
             const encodedMessage = encodeURIComponent(message);
