@@ -122,32 +122,71 @@
             background-color: #fff;
         }
 
-        /* Box Informasi Konfirmasi QRIS */
-        .qris-info-box {
-            background-color: #fff8e7;
+        /* Container & Box QRIS Alur Konfirmasi */
+        .qris-step-box {
+            background-color: #fffdf5;
             border: 1px solid #ffe0b2;
-            border-left: 4px solid #f57c00;
-            border-radius: 6px;
-            padding: 12px 15px;
+            border-radius: 8px;
+            padding: 15px;
             margin-bottom: 15px;
             display: none;
         }
-        .qris-info-box p {
+        .qris-notice {
             font-size: 13px;
-            color: #e65100;
+            color: #d84315;
+            background-color: #fbe9e7;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
             line-height: 1.4;
+        }
+        .btn-check-qris {
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .btn-show-qris {
+            background-color: #0288d1;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+        }
+        .qris-image-container {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed #801315;
+        }
+        .qris-img {
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
         }
 
         /* Total & Button WA */
         .total-box { font-size: 18px; font-weight: bold; text-align: right; margin-top: 15px; color: #801315; }
-        .btn-wa { background-color: #25D366; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; transition: background 0.2s; }
-        .btn-wa:hover { background-color: #1ebc57; }
+        .btn-wa { background-color: #801315; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; transition: background 0.2s; }
+        .btn-wa:hover { background-color: #5a0b0d; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="logo.png?v=4" alt="Chicken King Logo" class="logo-img">
+        <img src="logo.png?v=6" alt="Chicken King Logo" class="logo-img">
         <div class="tagline">Solusi Perut Lapar</div>
         <p class="sub-desc">Pesan Praktis & Cepat via WhatsApp</p>
         
@@ -187,16 +226,29 @@
                 <!-- Opsi Metode Pembayaran -->
                 <div class="form-group">
                     <label for="pembayaran">Metode Pembayaran</label>
-                    <select id="pembayaran" onchange="toggleQrisDisplay()">
+                    <select id="pembayaran" onchange="toggleQrisSection()">
                         <option value="Tunai">Tunai (Bayar Saat Pengambilan)</option>
-                        <option value="QRIS">QRIS (Transfer via WhatsApp)</option>
+                        <option value="QRIS">QRIS (Konfirmasi Stok via WA)</option>
                     </select>
                 </div>
 
-                <!-- Informasi Pembayaran QRIS -->
-                <div id="qris-info" class="qris-info-box">
-                    <p><strong>ℹ️ Catatan Pembayaran QRIS:</strong><br>
-                    Pembayaran QRIS dilakukan setelah penjual mengonfirmasi ketersediaan stok melalui WhatsApp. Kode QRIS akan dikirimkan saat chat terhubung.</p>
+                <!-- Alur Khusus Pembayaran QRIS -->
+                <div id="qris-step-box" class="qris-step-box">
+                    <div class="qris-notice">
+                        <strong>⚠️ Alur Pembayaran QRIS:</strong><br>
+                        1. Klik tombol hijau di bawah untuk cek ketersediaan stok via WhatsApp.<br>
+                        2. Jika stok dikonfirmasi <strong>READY</strong> oleh penjual, klik tombol biru untuk memunculkan barcode QRIS.
+                    </div>
+                    
+                    <button type="button" class="btn-check-qris" onclick="checkStockWA()">1. 📲 Chat WhatsApp Cek Stok</button>
+                    <button type="button" class="btn-show-qris" onclick="revealQris()">2. 💳 Stok Ready, Tampilkan QRIS</button>
+
+                    <!-- Gambar QRIS yang tersembunyi -->
+                    <div id="qris-image-container" class="qris-image-container">
+                        <p style="font-size: 13px; font-weight: bold; color: #5a0b0d;">Scan Barcode QRIS di Bawah Ini:</p>
+                        <img src="qris.png" alt="QRIS Chicken King" class="qris-img">
+                        <p style="font-size: 11px; color: #666;">Bisa di-scan menggunakan GoPay, OVO, DANA, ShopeePay, & Mobile Banking.</p>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -204,7 +256,7 @@
                     <textarea id="catatan" rows="3" placeholder="Masukkan catatan tambahan (misal: jam pengambilan, tingkat pedas, dll)"></textarea>
                 </div>
 
-                <button type="button" class="btn-wa" onclick="sendToWhatsApp()">📲 Pesan Sekarang via WhatsApp</button>
+                <button type="button" id="btn-submit" class="btn-wa" onclick="sendToWhatsApp()">📲 Pesan Tunai via WhatsApp</button>
             </form>
         </div>
 
@@ -298,16 +350,64 @@
             totalPriceEl.innerText = total.toLocaleString('id-ID');
         }
 
-        function toggleQrisDisplay() {
+        function toggleQrisSection() {
             const pembayaran = document.getElementById('pembayaran').value;
-            const qrisInfo = document.getElementById('qris-info');
+            const qrisStepBox = document.getElementById('qris-step-box');
+            const btnSubmit = document.getElementById('btn-submit');
+            
             if (pembayaran === "QRIS") {
-                qrisInfo.style.display = "block";
+                qrisStepBox.style.display = "block";
+                btnSubmit.style.display = "none"; // Sembunyikan tombol kirim umum
             } else {
-                qrisInfo.style.display = "none";
+                qrisStepBox.style.display = "none";
+                document.getElementById('qris-image-container').style.display = "none";
+                btnSubmit.style.display = "block"; // Tampilkan tombol untuk tunai
+                btnSubmit.innerText = "📲 Pesan Tunai via WhatsApp";
             }
         }
 
+        // Fungsi Langkah 1: Kirim pesan cek stok ke WhatsApp
+        function checkStockWA() {
+            const cartArray = Object.values(cart);
+            if (cartArray.length === 0) {
+                alert("Pilih minimal satu menu terlebih dahulu!");
+                return;
+            }
+
+            const nama = document.getElementById('nama').value.trim();
+            if (!nama) {
+                alert("Harap isi Nama Pemesan!");
+                return;
+            }
+
+            let message = `*Halo Chicken King, Saya Ingin Cek Stok Pesanan (Pembayaran QRIS):*\n\n`;
+            let total = 0;
+
+            cartArray.forEach(item => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                message += `• ${item.qty}x ${item.name} (Rp ${subtotal.toLocaleString('id-ID')})\n`;
+            });
+
+            message += `\n*Total:* Rp ${total.toLocaleString('id-ID')}\n`;
+            message += `*Nama Pemesan:* ${nama}\n\n`;
+            message += `_Apakah stok menu di atas ready? Jika ready saya akan lanjut bayar via QRIS._`;
+
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/${NO_WHATSAPP}?text=${encodedMessage}`, '_blank');
+        }
+
+        // Fungsi Langkah 2: Menampilkan gambar QRIS jika stok dikonfirmasi
+        function revealQris() {
+            const cartArray = Object.values(cart);
+            if (cartArray.length === 0) {
+                alert("Pilih minimal satu menu terlebih dahulu!");
+                return;
+            }
+            document.getElementById('qris-image-container').style.display = "block";
+        }
+
+        // Fungsi untuk Pesan Tunai biasa
         function sendToWhatsApp() {
             const cartArray = Object.values(cart);
             if (cartArray.length === 0) {
@@ -316,7 +416,6 @@
             }
 
             const nama = document.getElementById('nama').value.trim();
-            const pembayaran = document.getElementById('pembayaran').value;
             const catatan = document.getElementById('catatan').value.trim();
 
             if (!nama) {
@@ -324,7 +423,7 @@
                 return;
             }
 
-            let message = `*Halo Chicken King, Saya Mau Pesan (Takeaway):*\n\n`;
+            let message = `*Halo Chicken King, Saya Mau Pesan (Takeaway - Bayar Tunai):*\n\n`;
             let total = 0;
 
             cartArray.forEach(item => {
@@ -336,19 +435,13 @@
             message += `\n*Total Pesanan:* Rp ${total.toLocaleString('id-ID')}\n\n`;
             message += `*Data Pemesan:*\n`;
             message += `• Nama: ${nama}\n`;
-            message += `• Metode Bayar: ${pembayaran}\n`;
-            message += `• Tipe: Takeaway (Ambil di Toko)\n`;
+            message += `• Metode Bayar: Tunai (Saat Pengambilan)\n`;
             if (catatan) {
                 message += `• Catatan: ${catatan}\n`;
             }
 
-            if (pembayaran === "QRIS") {
-                message += `\n*(Mohon konfirmasi ketersediaan stok. Jika tersedia, kirimkan barcode QRIS untuk pembayaran)*`;
-            }
-
             const encodedMessage = encodeURIComponent(message);
-            const waUrl = `https://wa.me/${NO_WHATSAPP}?text=${encodedMessage}`;
-            window.open(waUrl, '_blank');
+            window.open(`https://wa.me/${NO_WHATSAPP}?text=${encodedMessage}`, '_blank');
         }
 
         renderMenu();
