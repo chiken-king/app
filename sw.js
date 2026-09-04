@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chicken-king-v3';
+const CACHE_NAME = 'chicken-king-v4';
 const urlsToCache = [
   '/app/',
   '/app/index.html',
