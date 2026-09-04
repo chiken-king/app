@@ -106,7 +106,7 @@
 
         /* Form & Keranjang */
         .section-title { font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #801315; padding-bottom: 5px; color: #5a0b0d; font-weight: bold; }
-        .cart-section, .form-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; border: 1px solid #eee; }
+        .cart-section, .form-section, .review-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; border: 1px solid #eee; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #e0e0e0; }
         .cart-controls button { background: #f0f0f0; border: 1px solid #ccc; width: 28px; height: 28px; font-weight: bold; cursor: pointer; border-radius: 4px; }
         
@@ -181,12 +181,26 @@
         .total-box { font-size: 18px; font-weight: bold; text-align: right; margin-top: 15px; color: #801315; }
         .btn-wa { background-color: #801315; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; transition: background 0.2s; }
         .btn-wa:hover { background-color: #5a0b0d; }
+
+        /* Style Section Ulasan */
+        .btn-review {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            font-size: 15px;
+        }
+        .btn-review:hover { background-color: #2b6cb0; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="logo.png?v=6" alt="Chicken King Logo" class="logo-img">
+        <img src="logo.png?v=7" alt="Chicken King Logo" class="logo-img">
         <div class="tagline">Solusi Perut Lapar</div>
         <p class="sub-desc">Pesan Praktis & Cepat via WhatsApp</p>
         
@@ -243,7 +257,7 @@
                     <button type="button" class="btn-check-qris" onclick="checkStockWA()">1. 📲 Chat WhatsApp Cek Stok</button>
                     <button type="button" class="btn-show-qris" onclick="revealQris()">2. 💳 Stok Ready, Tampilkan QRIS</button>
 
-                    <!-- Gambar QRIS yang tersembunyi -->
+                    <!-- Gambar QRIS -->
                     <div id="qris-image-container" class="qris-image-container">
                         <p style="font-size: 13px; font-weight: bold; color: #5a0b0d;">Scan Barcode QRIS di Bawah Ini:</p>
                         <img src="qris.png" alt="QRIS Chicken King" class="qris-img">
@@ -260,10 +274,23 @@
             </form>
         </div>
 
+        <!-- Section Beri Ulasan Google Maps -->
+        <div class="review-section">
+            <h2 class="section-title">⭐ Ulasan & Penilaian</h2>
+            <p style="font-size: 13px; color: #555; margin-bottom: 12px;">Suka dengan pelayanan Chicken King? Bantu kami dengan memberikan ulasan di Google Maps!</p>
+            
+            <div class="form-group">
+                <textarea id="review-text" rows="3" placeholder="Tuliskan ulasan kamu di sini (contoh: Ayamnya renyah, rasanya mantap!)..."></textarea>
+            </div>
+            
+            <button type="button" class="btn-review" onclick="submitGoogleReview()">⭐ Kirim Ulasan ke Google Maps</button>
+        </div>
+
     </div>
 
     <script>
         const NO_WHATSAPP = "6281257028511"; 
+        const MAPS_REVIEW_URL = "https://maps.app.goo.gl/q16dMSzeFJNw7NnDA";
 
         const products = [
             { id: 1, name: "Dada / Paha Atas", price: 9000 },
@@ -357,16 +384,15 @@
             
             if (pembayaran === "QRIS") {
                 qrisStepBox.style.display = "block";
-                btnSubmit.style.display = "none"; // Sembunyikan tombol kirim umum
+                btnSubmit.style.display = "none";
             } else {
                 qrisStepBox.style.display = "none";
                 document.getElementById('qris-image-container').style.display = "none";
-                btnSubmit.style.display = "block"; // Tampilkan tombol untuk tunai
+                btnSubmit.style.display = "block";
                 btnSubmit.innerText = "📲 Pesan Tunai via WhatsApp";
             }
         }
 
-        // Fungsi Langkah 1: Kirim pesan cek stok ke WhatsApp
         function checkStockWA() {
             const cartArray = Object.values(cart);
             if (cartArray.length === 0) {
@@ -397,7 +423,6 @@
             window.open(`https://wa.me/${NO_WHATSAPP}?text=${encodedMessage}`, '_blank');
         }
 
-        // Fungsi Langkah 2: Menampilkan gambar QRIS jika stok dikonfirmasi
         function revealQris() {
             const cartArray = Object.values(cart);
             if (cartArray.length === 0) {
@@ -407,7 +432,6 @@
             document.getElementById('qris-image-container').style.display = "block";
         }
 
-        // Fungsi untuk Pesan Tunai biasa
         function sendToWhatsApp() {
             const cartArray = Object.values(cart);
             if (cartArray.length === 0) {
@@ -442,6 +466,23 @@
 
             const encodedMessage = encodeURIComponent(message);
             window.open(`https://wa.me/${NO_WHATSAPP}?text=${encodedMessage}`, '_blank');
+        }
+
+        // Fungsi untuk meng-copy ulasan & mengarahkan ke Google Maps
+        function submitGoogleReview() {
+            const reviewText = document.getElementById('review-text').value.trim();
+            
+            if (reviewText !== "") {
+                navigator.clipboard.writeText(reviewText).then(() => {
+                    alert("Teks ulasan berhasil disalin!\n\nSilakan 'Tempel/Paste' teks ulasan kamu di halaman Google Maps yang akan terbuka.");
+                    window.open(MAPS_REVIEW_URL, '_blank');
+                }).catch(() => {
+                    window.open(MAPS_REVIEW_URL, '_blank');
+                });
+            } else {
+                alert("Membuka Google Maps Chicken King...");
+                window.open(MAPS_REVIEW_URL, '_blank');
+            }
         }
 
         renderMenu();
