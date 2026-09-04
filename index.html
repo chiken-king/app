@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chicken King - Pesan Online</title>
+    <title>Chicken King - Solusi Perut Lapar</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#5a0b0d">
@@ -30,12 +30,12 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
         .logo-svg {
             width: 50px;
             height: 50px;
-            fill: #ffd700; /* Warna Emas untuk Mahkota & Ayam */
+            fill: #ffd700; /* Warna Emas */
             flex-shrink: 0;
             filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.4));
         }
@@ -60,7 +60,21 @@
             display: block;
         }
 
-        header p { font-size: 13px; opacity: 0.9; margin-top: 6px; }
+        /* Tagline */
+        .tagline {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffd700;
+            letter-spacing: 1px;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        header p.sub-desc { 
+            font-size: 12px; 
+            opacity: 0.85; 
+            margin-top: 4px; 
+        }
 
         /* Link Lokasi Maps */
         .location-link {
@@ -135,7 +149,7 @@
 <body>
 
     <header>
-        <!-- Logo Vektor bawaan HTML (Bisa tampil tanpa file png) -->
+        <!-- Logo Vektor bawaan HTML -->
         <div class="logo-box">
             <svg class="logo-svg" viewBox="0 0 24 24">
                 <path d="M12 2l2.4 3.2 3.6-1.6-1.2 3.8 3.8 1.2-3.2 2.4 2.4 3.2-3.8-0.8c0.6 1.4 1 3 1 4.8 0 4.42-3.58 8-8 8s-8-3.58-8-8c0-1.8 0.4-3.4 1-4.8l-3.8 0.8 2.4-3.2-3.2-2.4 3.8-1.2-1.2-3.8 3.6 1.6zM10 12a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
@@ -146,7 +160,9 @@
             </div>
         </div>
 
-        <p>Pesan Praktis & Cepat via WhatsApp</p>
+        <!-- Tagline Toko -->
+        <div class="tagline">Solusi Perut Lapar</div>
+        <p class="sub-desc">Pesan Praktis & Cepat via WhatsApp</p>
         
         <!-- Link Alamat Lokasi Google Maps -->
         <a href="https://maps.app.goo.gl/q16dMSzeFJNw7NnDA?g_st=ac" target="_blank" rel="noopener noreferrer" class="location-link">
