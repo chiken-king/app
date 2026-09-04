@@ -10,36 +10,90 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Chicken King">
-    <link rel="apple-touch-icon" href="./logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
 
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
         body { background-color: #fcf8f5; color: #333; padding-bottom: 80px; }
         
-        /* Header */
-        header { background-color: #5a0b0d; color: white; text-align: center; padding: 20px 15px; border-bottom: 4px solid #801315; }
+        /* Header Container */
+        header { 
+            background-color: #5a0b0d; 
+            color: white; 
+            text-align: center; 
+            padding: 25px 15px 20px 15px; 
+            border-bottom: 4px solid #801315; 
+        }
         
-        /* Logo dari file logo.png */
+        /* Logo Image Style */
         .logo-img { 
-            max-width: 240px; 
-            width: 80%; 
+            max-width: 220px; 
+            width: 75%; 
             height: auto; 
             margin: 0 auto 8px auto; 
             display: block; 
-            /* Memberikan bayangan halus agar gambar transparan tetap tegas */
-            filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.4));
+        }
+
+        /* Fallback Logo Teks */
+        .logo-fallback {
+            display: none;
+            font-family: 'Arial Black', Impact, sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #ffffff;
+            margin-bottom: 6px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         header p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
 
-        /* Layout Main */
+        /* Tombol / Link Lokasi Maps */
+        .location-link {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: background-color 0.2s;
+        }
+        .location-link:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Layout & Main Container */
         .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
         
         /* Banner Install PWA */
-        .install-banner { display: none; background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 12px 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 14px; }
-        .btn-install { background: #801315; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-left: 8px; }
+        .install-banner { 
+            display: none; 
+            background: #fff3cd; 
+            border: 1px solid #ffeeba; 
+            color: #856404; 
+            padding: 12px 15px; 
+            border-radius: 8px; 
+            margin-bottom: 15px; 
+            text-align: center; 
+            font-size: 14px; 
+        }
+        .btn-install { 
+            background: #801315; 
+            color: white; 
+            border: none; 
+            padding: 6px 12px; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-left: 8px; 
+        }
 
-        /* Grid Menu */
+        /* Grid Menu Items */
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .menu-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; flex-direction: column; border: 1px solid #eee; }
         .menu-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
@@ -68,9 +122,22 @@
 <body>
 
     <header>
-        <!-- Memanggil file logo.png -->
-        <img src="./logo.png" alt="Chicken King Logo" class="logo-img">
+        <!-- Logo PNG dengan Fallback -->
+        <img src="logo.png" 
+             alt="Chicken King Logo" 
+             class="logo-img" 
+             id="main-logo"
+             onerror="this.style.display='none'; document.getElementById('alt-logo').style.display='block';">
+        
+        <!-- Logo Cadangan berbasis Teks -->
+        <div id="alt-logo" class="logo-fallback">CHICKEN KING</div>
+
         <p>Pesan Praktis & Cepat via WhatsApp</p>
+        
+        <!-- Link Alamat Lokasi Google Maps -->
+        <a href="https://maps.app.goo.gl/q16dMSzeFJNw7NnDA?g_st=ac" target="_blank" rel="noopener noreferrer" class="location-link">
+            📍 Lihat Lokasi di Google Maps
+        </a>
     </header>
 
     <div class="container">
