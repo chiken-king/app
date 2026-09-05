@@ -57,34 +57,27 @@
             justify-content: center;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 12px;
+            margin-top: 15px;
         }
 
-        /* Link Lokasi Maps & Download */
-        .header-btn {
+        /* Link Lokasi Maps & Download Header */
+        .btn-header-action {
             display: inline-block;
-            color: #ffffff;
+            color: #ffffff !important;
             text-decoration: none;
-            padding: 7px 14px;
+            padding: 10px 16px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: bold;
             transition: all 0.2s;
         }
         .btn-maps {
-            background-color: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .btn-maps:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
         .btn-download-header {
             background-color: #2e7d32;
-            border: 1px solid #388e3c;
-            color: #fff;
-        }
-        .btn-download-header:hover {
-            background-color: #1b5e20;
+            border: 1px solid #4caf50;
         }
 
         /* Main Container */
@@ -212,22 +205,28 @@
             width: 100%;
             font-size: 15px;
         }
-        .btn-review:hover { background-color: #2b6cb0; }
 
-        /* Style Section Download Aplikasi */
-        .btn-download-big {
+        /* Style Boks Utama Download Aplikasi */
+        .download-box {
+            background: #e8f5e9;
+            border: 2px solid #2e7d32;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn-download-action {
             display: block;
             background-color: #2e7d32;
-            color: white;
+            color: #ffffff !important;
             text-decoration: none;
-            text-align: center;
-            padding: 14px;
+            padding: 14px 20px;
             border-radius: 8px;
             font-weight: bold;
             font-size: 16px;
-            transition: background 0.2s;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
         }
-        .btn-download-big:hover { background-color: #1b5e20; }
 
         /* Style Section QR Code Aplikasi */
         .qr-app-section {
@@ -245,22 +244,31 @@
 <body>
 
     <header>
-        <img src="logo.png?v=10" alt="Chicken King Logo" class="logo-img">
+        <img src="logo.png?v=11" alt="Chicken King Logo" class="logo-img">
         <div class="tagline">Solusi Perut Lapar</div>
         <p class="sub-desc">Pesan Praktis & Cepat via WhatsApp</p>
         
         <div class="header-links">
-            <a href="https://maps.app.goo.gl/q16dMSzeFJNw7NnDA?g_st=ac" target="_blank" rel="noopener noreferrer" class="header-btn btn-maps">
-                📍 Lokasi Google Maps
+            <a href="https://maps.app.goo.gl/q16dMSzeFJNw7NnDA?g_st=ac" target="_blank" class="btn-header-action btn-maps">
+                📍 Google Maps
             </a>
-            <a href="https://drive.google.com/file/d/12EEjN1JsVEd6YikVuQqAomVOak4KGq5J/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="header-btn btn-download-header">
-                ⬇️ Download Aplikasi APK
+            <a href="https://drive.google.com/file/d/12EEjN1JsVEd6YikVuQqAomVOak4KGq5J/view?usp=drivesdk" target="_blank" class="btn-header-action btn-download-header">
+                ⬇️ Download APK
             </a>
         </div>
     </header>
 
     <div class="container">
         
+        <!-- BOKS UTAMA DOWNLOAD APLIKASI APK -->
+        <div class="download-box">
+            <h3 style="color: #1b5e20; margin-bottom: 6px;">📲 Aplikasi Chicken King Android</h3>
+            <p style="font-size: 13px; color: #333;">Klik tombol hijau di bawah ini untuk mengunduh file instalasi (APK):</p>
+            <a href="https://drive.google.com/file/d/12EEjN1JsVEd6YikVuQqAomVOak4KGq5J/view?usp=drivesdk" target="_blank" class="btn-download-action">
+                ⬇️ KLIK DI SINI UNTUK DOWNLOAD APK
+            </a>
+        </div>
+
         <div id="install-banner" class="install-banner">
             📲 Pasang aplikasi ini di HP kamu!
             <button id="install-btn" class="btn-install">Instal</button>
@@ -287,7 +295,6 @@
                     <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
                 </div>
 
-                <!-- Opsi Metode Pembayaran -->
                 <div class="form-group">
                     <label for="pembayaran">Metode Pembayaran</label>
                     <select id="pembayaran" onchange="toggleQrisSection()">
@@ -296,7 +303,6 @@
                     </select>
                 </div>
 
-                <!-- Alur Khusus Pembayaran QRIS -->
                 <div id="qris-step-box" class="qris-step-box">
                     <div class="qris-notice">
                         <strong>⚠️ Alur Pembayaran QRIS:</strong><br>
@@ -307,7 +313,6 @@
                     <button type="button" class="btn-check-qris" onclick="checkStockWA()">1. 📲 Chat WhatsApp Cek Stok</button>
                     <button type="button" class="btn-show-qris" onclick="revealQris()">2. 💳 Stok Ready, Tampilkan QRIS</button>
 
-                    <!-- Gambar QRIS -->
                     <div id="qris-image-container" class="qris-image-container">
                         <p style="font-size: 13px; font-weight: bold; color: #5a0b0d;">Scan Barcode QRIS di Bawah Ini:</p>
                         <img src="qris.png" alt="QRIS Chicken King" class="qris-img">
@@ -322,15 +327,6 @@
 
                 <button type="button" id="btn-submit" class="btn-wa" onclick="sendToWhatsApp()">📲 Pesan Tunai via WhatsApp</button>
             </form>
-        </div>
-
-        <!-- Section Download Aplikasi APK -->
-        <div class="download-section">
-            <h2 class="section-title">📲 Download Aplikasi Android (APK)</h2>
-            <p style="font-size: 13px; color: #555; margin-bottom: 12px;">Ingin memesan lebih cepat langsung dari HP? Unduh file aplikasi Chicken King (APK) resmi via Google Drive berikut:</p>
-            <a href="https://drive.google.com/file/d/12EEjN1JsVEd6YikVuQqAomVOak4KGq5J/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="btn-download-big">
-                ⬇️ Download Chicken King APK (Google Drive)
-            </a>
         </div>
 
         <!-- Section Beri Ulasan Google Maps -->
@@ -535,7 +531,6 @@
             window.open(`https://wa.me/${NO_WHATSAPP}?text=${encodedMessage}`, '_blank');
         }
 
-        // Fungsi ulasan Google Maps
         function submitGoogleReview() {
             const reviewText = document.getElementById('review-text').value.trim();
             
